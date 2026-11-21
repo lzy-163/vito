@@ -24,6 +24,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
+          extensions: sqlite
+          coverage: xdebug
 
       - name: Cache Composer packages
         id: composer-cache
@@ -41,7 +43,9 @@ jobs:
         run: touch storage/database-test.sqlite
 
       - name: Set up the .env file
-        run: touch .env
+        run: |
+          echo "DB_CONNECTION=sqlite" >> .env
+          echo "DB_DATABASE=storage/database-test.sqlite" >> .env
 
       - name: Run test suite
         run: php artisan test
